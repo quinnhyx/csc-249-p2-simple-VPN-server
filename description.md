@@ -44,17 +44,17 @@ server is done!
 **Network Layers Interaction**
 When the application is executed, the following interactions occur between the network layers:
 1.	Client Initialization:
-o	The client establishes a TCP connection with the VPN using the specified IP and port.
-o	It encodes the message with the server's IP and port, operation type, and message, and sends this to the VPN.
+  The client establishes a TCP connection with the VPN using the specified IP and port.
+  It encodes the message with the server's IP and port, operation type, and message, and sends this to the VPN.
 2.	VPN Processing:
-o	The VPN parses the message to extract the server's IP and port, the operation, and the message.
-o	The VPN establishes a new TCP connection with the target server using the parsed IP and port.
-o	It forwards the client's operation request to the server and waits for a response.
+  The VPN parses the message to extract the server's IP and port, the operation, and the message.
+  The VPN establishes a new TCP connection with the target server using the parsed IP and port.
+  It forwards the client's operation request to the server and waits for a response.
 3.	Server Response:
-o	The server processes the received request and sends the result back to the VPN over the established connection.
-o	The VPN receives the server's response and forwards it back to the client.
+  The server processes the received request and sends the result back to the VPN over the established connection.
+  The VPN receives the server's response and forwards it back to the client.
 4.	Client Finalization:
-o	The client receives the response from the VPN and prints it to the terminal, concluding the interaction.
+  The client receives the response from the VPN and prints it to the terminal, concluding the interaction.
 
 **Command-line trace client and server in operatio**n
 % python echo-client.py --server_IP 127.0.0.1 --server_port 65432 --VPN_IP 127.0.0.1 --VPN_port 12345
@@ -97,5 +97,5 @@ Connected established with ('127.0.0.1', 53573)
 Received client message: 'b'addition hi cs'' [20 bytes]
 echoing 'b'addition hi cs'' back to client
 
-Acknowledgments
+**Acknowledgments**
 Zhirou and TA Ashley helped to clarify the requirements and debug with the code.
