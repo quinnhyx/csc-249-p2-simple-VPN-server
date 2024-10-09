@@ -17,8 +17,8 @@ def parse_message(message):
     message = message.decode("utf-8")
     # Parse the application-layer header into the destination SERVER_IP, destination SERVER_PORT,
     # and message to forward to that destination
-    raise NotImplementedError("Your job is to fill this function in. Remove this line when you're done.")
-    return SERVER_IP, SERVER_PORT, message
+    SERVER_IP, SERVER_PORT, operation, msg = message.split('|')
+    return SERVER_IP, SERVER_PORT, operation, msg
 
 ### INSTRUCTIONS ###
 # The VPN, like the server, must listen for connections from the client on IP address
@@ -31,3 +31,40 @@ def parse_message(message):
 
 # The VPN server must additionally print appropriate trace messages and send back to the
 # client appropriate error messages.
+
+def main():
+    print("server starting - listening for connections at IP", VPN_IP, "and port", VPN_PORT)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as v:
+        v.bind((VPN_IP, VPN_PORT))
+        v.listen()
+        conn, addr = v.accept()
+        with conn:
+            print(f"Connected established with {addr}")
+            while True:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                print(f"Received client message: '{data!r}' [{len(data)} bytes]")
+
+                SERVER_IP, SERVER_PORT, operation, msg = parse_message(data)
+                SERVER_PORT = (int)(SERVER_PORT)
+                request = f"{operation} {msg}".encode()
+
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                        s.connect((SERVER_IP, SERVER_PORT))
+                        s.sendall(request)
+
+                        response = s.recv(1024)
+                        print(f"Received response from server: '{response.decode()}'")
+
+                    # Forward the server's response back to the client
+                    conn.sendall(response)
+                    
+                except Exception as e:
+                    print(f"Error communicating with server: {e}")
+
+print("VPN is done!")
+
+if __name__ == "__main__":
+    main()
