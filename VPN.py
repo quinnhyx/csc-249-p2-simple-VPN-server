@@ -17,8 +17,8 @@ def parse_message(message):
     message = message.decode("utf-8")
     # Parse the application-layer header into the destination SERVER_IP, destination SERVER_PORT,
     # and message to forward to that destination
-    SERVER_IP, SERVER_PORT, operation, msg = message.split('|')
-    return SERVER_IP, SERVER_PORT, operation, msg
+    SERVER_IP, SERVER_PORT, msg = message.split('|')
+    return SERVER_IP, SERVER_PORT, msg
 
 ### INSTRUCTIONS ###
 # The VPN, like the server, must listen for connections from the client on IP address
@@ -46,9 +46,9 @@ def main():
                     break
                 print(f"Received client message: '{data!r}' [{len(data)} bytes]")
 
-                SERVER_IP, SERVER_PORT, operation, msg = parse_message(data)
+                SERVER_IP, SERVER_PORT, msg = parse_message(data)
                 SERVER_PORT = (int)(SERVER_PORT)
-                request = f"{operation} {msg}".encode()
+                request = f"{msg}".encode()
 
                 try:
                     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

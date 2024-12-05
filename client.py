@@ -19,18 +19,16 @@ VPN_IP = args.VPN_IP  # The server's IP address
 VPN_PORT = args.VPN_port  # The port used by the server
 MSG = ' '.join(args.message) # The message to send to the server
 
-def encode_message(operation, message):
+def encode_message(MSG):
     # Add an application-layer header to the message that the VPN can use to forward it
-    return f"{SERVER_IP}|{SERVER_PORT}|{operation}|{' '.join(map(str, message))}"
+    return f"{SERVER_IP}|{SERVER_PORT}|{MSG}"
 
 def main():
     print("client starting - connecting to VPN at IP", VPN_IP, "and port", VPN_PORT)
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((VPN_IP, VPN_PORT))
-            operation = input("Enter the operation (concat/reverse): ")
-            args = input("Enter words separated by space: ").split()
-            request = encode_message(operation, args)
+            request = encode_message(MSG)
             print(f"connection established, sending message{request}")
             s.sendall(bytes(request, 'utf-8'))
             print("message sent, waiting for reply")
